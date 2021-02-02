@@ -1,19 +1,20 @@
-
 rule all:
-    input: 
-        "mtcars.sqlite3",
+    input:
         "mtcars.png"
 
 rule data:
+    input:
+        script = "week4_R.R"
     output:
-        "mtcars.sqlite3"
-    script: 
-        "week4_R.R"
+        data = "mtcars.sqlite3"
+    shell:
+        "Rscript {input.script} --out {output.data}"
 
 rule plot:
     input:
-        "mtcars.sqlite3"
+        data = "mtcars.sqlite3",
+        script = "week4_Pyton.py"
     output:
-        "mtcars.png"
-    script: 
-        "week4_Pyton.py"
+        data = "mtcars.png"
+    shell:
+        "python {input.script} -data {input.data} -plot {output.data}"
